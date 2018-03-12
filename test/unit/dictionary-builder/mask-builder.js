@@ -1,9 +1,9 @@
 'use strict';
 
-const Dictionary = require('lib/dictionary');
-const MaskBuilder = require('lib/dictionary/mask-builder');
+const Dictionary = require('lib/dictionary-builder/dictionary');
+const MaskBuilder = require('lib/dictionary-builder/mask-builder');
 
-describe('dictionary/mask-builder', () => {
+describe('dictionary-builder/mask-builder', () => {
     let dictionary;
 
     beforeEach(() => {

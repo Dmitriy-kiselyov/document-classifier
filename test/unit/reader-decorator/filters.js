@@ -1,8 +1,8 @@
 'use strict';
 
-const {NO_LETTERS, NO_DIGITS} = require('lib/reader-proxy/filters');
+const {NO_LETTERS, NO_DIGITS} = require('lib/reader-decorator/filters');
 
-describe('reader-proxy/filters', () => {
+describe('reader-decorator/filters', () => {
     describe('NO_LETTERS', () => {
         it('should filter out one letter', () => {
             assert.isFalse(NO_LETTERS('s'));

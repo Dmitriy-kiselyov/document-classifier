@@ -1,8 +1,8 @@
 'use strict';
 
-const Dictionary = require('lib/dictionary');
+const Dictionary = require('lib/dictionary-builder/dictionary');
 
-describe('dictionary', () => {
+describe('dictionary-builder/dictionary', () => {
     it('should return words order', () => {
         const dictionary = new Dictionary();
         dictionary.add('word1');

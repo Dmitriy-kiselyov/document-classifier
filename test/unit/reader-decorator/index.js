@@ -1,6 +1,6 @@
 'use strict';
 
-const ReaderProxy = require('lib/reader-proxy');
+const ReaderProxy = require('lib/reader-decorator');
 
 const createReaderStub = () => {
     return {
@@ -9,7 +9,7 @@ const createReaderStub = () => {
     };
 };
 
-describe('reader-proxy', () => {
+describe('reader-decorator', () => {
     let reader;
     let readerProxy;
 
