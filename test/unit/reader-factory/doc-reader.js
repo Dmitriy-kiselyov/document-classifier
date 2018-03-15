@@ -24,12 +24,20 @@ describe('reader-factory/doc-reader', () => {
             return assert.isRejected(reader.read(), 'File should not be empty');
         });
 
-        it('should parse text', () => {
+        it('should parse text', async () => {
+            const reader = new DocReader('path');
+            const text = await reader.read();
+
+            assert.deepEqual(text, ['simple', 'text', 'with', 'spaces']);
+        });
+
+        it('should read only once', async () => {
             const reader = new DocReader('path');
 
-            return reader.read().then((text) => {
-                assert.deepEqual(text, ['simple', 'text', 'with', 'spaces']);
-            });
+            await reader.read();
+            await reader.read();
+
+            assert.calledOnce(mammoth.extractRawText);
         });
     });
 
@@ -53,8 +61,7 @@ describe('reader-factory/doc-reader', () => {
         it('should throw if file was not read yet', () => {
             const reader = new DocReader('path');
 
-            const next = () => reader.next();
-            assert.throws(next, Error, 'Should read file first');
+            assert.throws(() => reader.next(), Error, 'Should read file first');
         });
 
         it('should provide next word', async () => {
@@ -66,6 +73,34 @@ describe('reader-factory/doc-reader', () => {
             assert.equal(reader.next(), 'with');
             assert.equal(reader.next(), 'spaces');
             assert.equal(reader.next(), undefined);
+        });
+    });
+
+    describe('reset', () => {
+        it('should start reading words from beginning', async () => {
+            const reader = new DocReader('path');
+
+            await reader.read();
+            reader.next();
+            reader.next();
+            reader.reset();
+
+            assert.equal(reader.next(), 'simple');
+            assert.equal(reader.next(), 'text');
+        });
+
+        it('should reset on read', async () => {
+            const reader = new DocReader('path');
+            sandbox.spy(reader, 'reset');
+
+            await reader.read();
+            reader.next();
+            reader.next();
+            await reader.read();
+
+            assert.calledTwice(reader.reset);
+            assert.equal(reader.next(), 'simple');
+            assert.equal(reader.next(), 'text');
         });
     });
 });
