@@ -1,6 +1,6 @@
 'use strict';
 
-const Dataset = require('lib/dataset');
+const Data = require('lib/dataset/data');
 const utils = require('lib/dataset/utils');
 
 describe('dataset', () => {
@@ -10,7 +10,7 @@ describe('dataset', () => {
 
     describe('create', () => {
         const shouldThrow = (classifiedFiles, trainingFiles, errorMassage) => {
-            const constructor = () => new Dataset(classifiedFiles, trainingFiles);
+            const constructor = () => new Data(classifiedFiles, trainingFiles);
             assert.throws(constructor, Error, errorMassage);
         };
 
@@ -49,7 +49,7 @@ describe('dataset', () => {
         });
 
         it('should accept files', () => {
-            const dataset = Dataset.create(['file1'], ['file2', 'file3']);
+            const dataset = Data.create(['file1'], ['file2', 'file3']);
 
             assert.deepEqual(dataset.classifiedFiles, ['file1']);
             assert.deepEqual(dataset.trainingFiles, ['file2', 'file3']);
@@ -59,7 +59,7 @@ describe('dataset', () => {
     describe('createAndSplit', () => {
         describe('should throw if "files"', () => {
             const shouldThrow = (files, errorMassage) => {
-                const createAndSplit = () => Dataset.createAndSplit(files, 0.5);
+                const createAndSplit = () => Data.createAndSplit(files, 0.5);
                 assert.throws(createAndSplit, Error, errorMassage);
             };
 
@@ -83,7 +83,7 @@ describe('dataset', () => {
         it('should split files by rate', () => {
             sandbox.stub(utils, 'splitFiles').returns([['file1'], ['file2', 'file3']]);
 
-            const dataset = Dataset.createAndSplit(['file1', 'file2', 'file3'], 0.5);
+            const dataset = Data.createAndSplit(['file1', 'file2', 'file3'], 0.5);
 
             assert.calledOnceWith(utils.splitFiles, ['file1', 'file2', 'file3'], 0.5);
             assert.deepEqual(dataset.classifiedFiles, ['file1']);
@@ -93,7 +93,7 @@ describe('dataset', () => {
         it('should split files by rate even if rate is very small', () => {
             sandbox.stub(utils, 'splitFiles').returns([[], ['file1', 'file2', 'file3']]);
 
-            const dataset = Dataset.createAndSplit(['file1', 'file2', 'file3'], 0.1);
+            const dataset = Data.createAndSplit(['file1', 'file2', 'file3'], 0.1);
 
             assert.calledOnceWith(utils.splitFiles, ['file1', 'file2', 'file3'], 0.1);
             assert.deepEqual(dataset.classifiedFiles, ['file3']);
@@ -103,7 +103,7 @@ describe('dataset', () => {
         it('should split files by rate even if rate is very big', () => {
             sandbox.stub(utils, 'splitFiles').returns([['file1', 'file2', 'file3'], []]);
 
-            const dataset = Dataset.createAndSplit(['file1', 'file2', 'file3'], 0.9);
+            const dataset = Data.createAndSplit(['file1', 'file2', 'file3'], 0.9);
 
             assert.calledOnceWith(utils.splitFiles, ['file1', 'file2', 'file3'], 0.9);
             assert.deepEqual(dataset.classifiedFiles, ['file1', 'file2']);
