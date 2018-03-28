@@ -1,6 +1,6 @@
 'use strict';
 
-const readerCache = require('lib/dataset/reader-cache');
+const readerCache = require('lib/reader-cache');
 const ReaderFactory = require('lib/reader-factory');
 const ReaderDecorator = require('lib/reader-decorator');
 const transformers = require('lib/reader-decorator/transformers');
@@ -22,6 +22,8 @@ describe('dataset/reader-cache', () => {
         sandbox.stub(transformers, 'all').returns(['tr1', 'tr2']);
         sandbox.stub(filters, 'all').returns(['f1', 'f2']);
     });
+
+    afterEach(() => sandbox.restore()); //TODO: Clear cache
 
     it('should create reader on first time', () => {
         readerCache.get('file.txt');
