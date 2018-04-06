@@ -1,6 +1,6 @@
 'use strict';
 
-const {NO_LETTERS, NO_DIGITS} = require('lib/reader-decorator/filters');
+const {NO_LETTERS, NO_DIGITS, NO_EMAILS} = require('lib/reader-decorator/filters');
 
 describe('reader-decorator/filters', () => {
     describe('NO_LETTERS', () => {
@@ -20,6 +20,16 @@ describe('reader-decorator/filters', () => {
 
         it('should accept words without digits', () => {
             assert.isTrue(NO_DIGITS('word_does_not_have_digits'));
+        });
+    });
+
+    describe('NO_EMAILS', () => {
+        it('should filter out emails', () => {
+            assert.isFalse(NO_EMAILS('dmitriy@gmail.com'));
+        });
+
+        it('should accept not emails', () => {
+            assert.isTrue(NO_EMAILS('regular_word'));
         });
     });
 });
