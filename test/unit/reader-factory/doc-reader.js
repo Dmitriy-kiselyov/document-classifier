@@ -10,14 +10,14 @@ describe('reader-factory/doc-reader', () => {
     beforeEach(() => {
         sandbox.stub(mammoth, 'extractRawText')
             .withArgs({path: 'path'})
-            .resolves({value: ' simple  text\nwith \n \r\n spaces'});
+            .resolves({object: ' simple  text\nwith \n \r\n spaces'});
     });
 
     afterEach(() => sandbox.restore());
 
     describe('read', () => {
         it('should throw if empty file passed', () => {
-            mammoth.extractRawText.withArgs({path: 'path/empty'}).resolves({value: ' \n '});
+            mammoth.extractRawText.withArgs({path: 'path/empty'}).resolves({object: ' \n '});
 
             const reader = new DocReader('path/empty');
 
