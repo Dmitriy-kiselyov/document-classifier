@@ -5,6 +5,7 @@ const fs = require('fs-extra');
 const path = require('path');
 
 const DictionaryBuilder = require('../../lib/dictionary-builder/index');
+const DictionaryFilter = require('../../lib/dictionary-builder/dictionary-filter');
 const readerCache = require('../../lib/reader-cache');
 const Classifier = require('../../lib/classifier');
 const utils = require('./utils');
@@ -15,13 +16,17 @@ const desktop = 'C:\\Users\\dmitr\\Desktop';
 // test1File(path.resolve(root, 'alt.atheism', '49960'), path.resolve(desktop, '49960.txt'));
 testFolders(0.8, path.resolve(desktop, '20_newsgroup.txt'));
 
+const filterDictionary = (dictionary) => {
+    return DictionaryFilter.filter(dictionary, DictionaryFilter.ONCE);
+};
+
 async function test1File(file, output) {
     const dictionaryBuilder = new DictionaryBuilder();
     const reader = readerCache.get(file);
     await dictionaryBuilder.add(reader);
     const dictionary = dictionaryBuilder.build();
 
-    await printDictionaryWithCount(dictionary, output);
+    await printDictionaryWithCount(filterDictionary(dictionary), output);
 }
 
 async function testFolders(rate, output) {
@@ -49,15 +54,4 @@ async function printDictionaryWithCount(dictionary, output) {
     const message = `SIZE = ${dictionary.size}\r\n${wordsMessage}`;
     await fs.writeFile(output, message);
     console.log('DONE');
-}
-
-async function printDictionary(dictionary, output) {
-    if (output) {
-        const message = `SIZE = ${dictionary.size}\r\n${dictionary.words.join('\r\n')}`;
-        await fs.writeFile(output, message);
-        console.log('DONE');
-    } else {
-        console.log('SIZE = ', dictionary.size);
-        console.log(dictionary.words);
-    }
 }
