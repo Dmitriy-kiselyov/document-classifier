@@ -1,6 +1,6 @@
 'use strict';
 
-const {NO_LETTERS, NO_DIGITS, NO_EMAILS} = require('lib/reader-decorator/filters');
+const {NO_LETTERS, NO_DIGITS, NO_EMAILS, ENGLISH} = require('lib/reader-decorator/filters');
 
 describe('reader-decorator/filters', () => {
     describe('NO_LETTERS', () => {
@@ -13,23 +13,26 @@ describe('reader-decorator/filters', () => {
         });
     });
 
-    describe('NO_DIGITS', () => {
-        it('should filter out words with digits', () => {
-            assert.isFalse(NO_DIGITS('word_has_1_digit'));
+    describe('ENGLISH', () => {
+        it('should recognize english words', () => {
+            assert.isTrue(ENGLISH('a'));
+            assert.isTrue(ENGLISH('Tatiana'));
+            assert.isTrue(ENGLISH('hello-world-love-you'));
+            assert.isTrue(ENGLISH('Hello_World_love_you'));
+            assert.isTrue(ENGLISH(`break'n'breakfast`));
+            assert.isTrue(ENGLISH(`Tom&Jerry`));
         });
 
-        it('should accept words without digits', () => {
-            assert.isTrue(NO_DIGITS('word_does_not_have_digits'));
-        });
-    });
-
-    describe('NO_EMAILS', () => {
-        it('should filter out emails', () => {
-            assert.isFalse(NO_EMAILS('dmitriy@gmail.com'));
-        });
-
-        it('should accept not emails', () => {
-            assert.isTrue(NO_EMAILS('regular_word'));
+        it('should not recognize not english words', () => {
+            assert.isFalse(ENGLISH(''));
+            assert.isFalse(ENGLISH('Tati0ana'));
+            assert.isFalse(ENGLISH('Tati.ana'));
+            assert.isFalse(ENGLISH('hello--world'));
+            assert.isFalse(ENGLISH('-hello'));
+            assert.isFalse(ENGLISH('hello__world'));
+            assert.isFalse(ENGLISH('world_'));
+            assert.isFalse(ENGLISH('Tom&'));
+            assert.isFalse(ENGLISH('Tom-_Jerry'));
         });
     });
 });
