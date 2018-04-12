@@ -2,7 +2,7 @@
 
 const Promise = require('bluebird');
 
-const Classifier = require('../classifier');
+const Classifier = require('../../lib/classifier');
 const utils = require('./utils');
 
 const root = 'C:\\Users\\dmitr\\Desktop\\20_newsgroup';

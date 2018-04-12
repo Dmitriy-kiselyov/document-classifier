@@ -4,9 +4,9 @@
 const fs = require('fs-extra');
 const path = require('path');
 
-const DictionaryBuilder = require('../dictionary-builder');
-const readerCache = require('../reader-cache');
-const Classifier = require('../classifier');
+const DictionaryBuilder = require('../../lib/dictionary-builder/index');
+const readerCache = require('../../lib/reader-cache');
+const Classifier = require('../../lib/classifier');
 const utils = require('./utils');
 
 const root = 'C:\\Users\\dmitr\\Desktop\\20_newsgroup';
