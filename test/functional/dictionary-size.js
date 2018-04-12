@@ -21,7 +21,7 @@ async function test1File(file, output) {
     await dictionaryBuilder.add(reader);
     const dictionary = dictionaryBuilder.build();
 
-    await printDictionary(dictionary, output);
+    await printDictionaryWithCount(dictionary, output);
 }
 
 async function testFolders(rate, output) {
@@ -33,7 +33,22 @@ async function testFolders(rate, output) {
     await classifier.prepare(folders, rate);
     console.timeEnd('prepare dictionary');
 
-    await printDictionary(classifier.dataset.dictionary, output);
+    await printDictionaryWithCount(classifier.dataset.dictionary, output);
+}
+
+async function printDictionaryWithCount(dictionary, output) {
+    const words = [];
+    dictionary.words.forEach((word) => {
+        words.push({word, count: dictionary.count(word)});
+    });
+    words.sort((w1, w2) => w2.count - w1.count);
+
+    const wordsMessage = words.reduce((message, word) => {
+        return `${message}${word.word} (${word.count})\r\n`;
+    }, '');
+    const message = `SIZE = ${dictionary.size}\r\n${wordsMessage}`;
+    await fs.writeFile(output, message);
+    console.log('DONE');
 }
 
 async function printDictionary(dictionary, output) {

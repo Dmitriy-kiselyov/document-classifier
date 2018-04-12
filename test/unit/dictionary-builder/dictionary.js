@@ -43,4 +43,15 @@ describe('dictionary-builder/dictionary', () => {
 
         assert.equal(dictionary.size, 2);
     });
+
+    it('should count words', () => {
+        const dictionary = new Dictionary();
+        dictionary.add('word1');
+        dictionary.add('word2');
+        dictionary.add('word1');
+
+        assert.equal(dictionary.count('word1'), 2);
+        assert.equal(dictionary.count('word2'), 1);
+        assert.equal(dictionary.count('word3'), 0);
+    });
 });
