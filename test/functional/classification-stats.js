@@ -2,7 +2,6 @@
 
 const Promise = require('bluebird');
 const path = require('path');
-const _ = require('lodash');
 
 const Classifier = require('../../lib/classifier');
 const utils = require('./utils');
@@ -11,7 +10,7 @@ const root = 'C:\\Users\\dmitr\\Desktop\\20_newsgroup';
 
 const printStats = (stats) => {
     const formatPercent = (yes, total) => {
-        return _.floor(yes / total, 2);
+        return Math.floor(yes / total * 100);
     };
 
     stats.forEach((test) => test.folder = path.basename(test.folder));

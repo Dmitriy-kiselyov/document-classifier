@@ -1,6 +1,6 @@
 'use strict';
 
-const {NO_LETTERS, NO_DIGITS, NO_EMAILS, ENGLISH} = require('lib/reader-decorator/filters');
+const {NO_LETTERS, ENGLISH, NO_ENGLISH_PRETEXT} = require('lib/reader-decorator/filters');
 
 describe('reader-decorator/filters', () => {
     describe('NO_LETTERS', () => {
@@ -33,6 +33,19 @@ describe('reader-decorator/filters', () => {
             assert.isFalse(ENGLISH('world_'));
             assert.isFalse(ENGLISH('Tom&'));
             assert.isFalse(ENGLISH('Tom-_Jerry'));
+        });
+    });
+
+    describe('NO_ENGLISH_PRETEXT', () => {
+        it('should filter out pretexts', () => {
+            assert.isFalse(NO_ENGLISH_PRETEXT('the'));
+            assert.isFalse(NO_ENGLISH_PRETEXT('this'));
+            assert.isFalse(NO_ENGLISH_PRETEXT('and'));
+            assert.isFalse(NO_ENGLISH_PRETEXT('in'));
+        });
+
+        it('should accept common words', () => {
+            assert.isTrue(NO_ENGLISH_PRETEXT('hello'));
         });
     });
 });
