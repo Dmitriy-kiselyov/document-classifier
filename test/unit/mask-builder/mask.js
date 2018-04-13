@@ -23,6 +23,17 @@ describe('mask-builder/mask', () => {
         assert.deepEqual(mask.get(), [1, 0, 1]);
     });
 
+    it('should count words on demand', () => {
+        Mask.countWords = true;
+        const mask = new Mask(dictionary, {count: true});
+        mask.add('word1');
+        mask.add('word4');
+        mask.add('word3');
+        mask.add('word1');
+
+        assert.deepEqual(mask.get(), [2, 0, 1]);
+    });
+
     it('should return mask clone', () => {
         const maskBuilder = new Mask(dictionary);
         maskBuilder.add('word1');
