@@ -1,4 +1,7 @@
 module.exports = {
     extends: 'gemini-testing',
-    root: true
+    root: true,
+    rules: {
+        "linebreak-style": "off"
+    }
 };
