@@ -16,17 +16,19 @@ const desktop = 'C:\\Users\\dmitr\\Desktop';
 // test1File(path.resolve(root, 'alt.atheism', '49960'), path.resolve(desktop, '49960.txt'));
 testFolders(0.8, path.resolve(desktop, '20_newsgroup.txt'));
 
-const filterDictionary = (dictionary) => {
-    return DictionaryFilter.filter(dictionary, DictionaryFilter.ONCE);
-};
-
 async function test1File(file, output) {
     const dictionaryBuilder = new DictionaryBuilder();
     const reader = readerCache.get(file);
     await dictionaryBuilder.add(reader);
-    const dictionary = dictionaryBuilder.build();
 
-    await printDictionaryWithCount(filterDictionary(dictionary), output);
+    const dictionary = filterDictionary(dictionaryBuilder.build());
+
+    printDictionaryStats(dictionary);
+    await printDictionaryWithCount(dictionary, output);
+}
+
+function filterDictionary(dictionary) {
+    return DictionaryFilter.filter(dictionary, DictionaryFilter.ONCE);
 }
 
 async function testFolders(rate, output) {
@@ -38,6 +40,7 @@ async function testFolders(rate, output) {
     await classifier.prepare(folders, rate);
     console.timeEnd('prepare dictionary');
 
+    printDictionaryStats(classifier.dataset.dictionary);
     await printDictionaryWithCount(classifier.dataset.dictionary, output);
 }
 
@@ -54,4 +57,14 @@ async function printDictionaryWithCount(dictionary, output) {
     const message = `SIZE = ${dictionary.size}\r\n${wordsMessage}`;
     await fs.writeFile(output, message);
     console.log('DONE');
+}
+
+function printDictionaryStats(dictionary) {
+    let stat = new Map();
+    const addStat = (count) => stat.set(count, stat.has(count) ? stat.get(count) + 1 : 1);
+    dictionary.words.forEach((word) => addStat(dictionary.count(word)));
+
+    stat = new Map([...stat.entries()].sort((e1, e2) => e2[0] - e1[0]));
+    console.log('DICTIONARY STATS');
+    console.log(stat);
 }
