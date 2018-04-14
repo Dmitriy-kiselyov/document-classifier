@@ -53,5 +53,4 @@ describe('dictionary-builder/dictionary-filter', () => {
             assert.deepEqual(filteredDictionary.words, ['word1', 'word3']);
         });
     });
-
 });

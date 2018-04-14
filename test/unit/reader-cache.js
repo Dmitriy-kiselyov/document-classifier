@@ -1,6 +1,5 @@
 'use strict';
 
-const readerCache = require('lib/reader-cache');
 const ReaderFactory = require('lib/reader-factory');
 const ReaderDecorator = require('lib/reader-decorator');
 const transformers = require('lib/reader-decorator/transformers');
@@ -8,6 +7,7 @@ const filters = require('lib/reader-decorator/filters');
 
 describe('dataset/reader-cache', () => {
     const sandbox = sinon.sandbox.create();
+    let readerCache;
 
     const createReaderDecoratorStub = () => {
         return {
@@ -17,13 +17,18 @@ describe('dataset/reader-cache', () => {
     };
 
     beforeEach(() => {
+        readerCache = require('lib/reader-cache');
+
         sandbox.stub(ReaderFactory, 'create').returns('READER');
         sandbox.stub(ReaderDecorator, 'create').callsFake(() => createReaderDecoratorStub());
         sandbox.stub(transformers, 'all').returns(['tr1', 'tr2']);
         sandbox.stub(filters, 'all').returns(['f1', 'f2']);
     });
 
-    afterEach(() => sandbox.restore()); //TODO: Clear cache
+    afterEach(() => {
+        sandbox.restore();
+        delete require.cache[require.resolve('lib/reader-cache')];
+    }); //TODO: Clear cache
 
     it('should create reader on first time', () => {
         readerCache.get('file.txt');
