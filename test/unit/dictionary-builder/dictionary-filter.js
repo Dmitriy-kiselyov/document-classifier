@@ -59,12 +59,24 @@ describe('dictionary-builder/dictionary-filter', () => {
             const dictionary1 = createDictionary([{word: 'word1'}, {word: 'word2'}]);
             const dictionary2 = createDictionary([{word: 'word2'}, {word: 'word3'}]);
             const dictionary3 = createDictionary([{word: 'word3'}, {word: 'word2'}]);
-            const dictionary = createDictionary([{word: 'word1'}, {word: 'word2'}, {word: 'word3'}]);
+            const commonDictionary = createDictionary([{word: 'word1'}, {word: 'word2'}, {word: 'word3'}]);
 
-            const createCommonWordsFilter = DictionaryFilter.createCommonWordsFilter([dictionary1, dictionary2, dictionary3]);
-            const filteredDictionary = DictionaryFilter.filter(dictionary, createCommonWordsFilter);
+            const commonWordsFilter = DictionaryFilter.createCommonWordsFilter(commonDictionary, [dictionary1, dictionary2, dictionary3]);
+            const filteredDictionary = DictionaryFilter.filter(commonDictionary, commonWordsFilter);
 
             assert.deepEqual(filteredDictionary.words, ['word1', 'word3']);
+        });
+
+        it('should remove words that appear in number of dictionaries specified in argument', () => {
+            const dictionary1 = createDictionary([{word: 'word1'}, {word: 'word2'}]);
+            const dictionary2 = createDictionary([{word: 'word2'}, {word: 'word3'}]);
+            const dictionary3 = createDictionary([{word: 'word3'}, {word: 'word2'}]);
+            const commonDictionary = createDictionary([{word: 'word1'}, {word: 'word2'}, {word: 'word3'}]);
+
+            const commonWordsFilter = DictionaryFilter.createCommonWordsFilter(commonDictionary, [dictionary1, dictionary2, dictionary3], 2);
+            const filteredDictionary = DictionaryFilter.filter(commonDictionary, commonWordsFilter);
+
+            assert.deepEqual(filteredDictionary.words, ['word1']);
         });
     });
 });
