@@ -10,7 +10,10 @@
     "coverage": "istanbul cover node_modules/mocha/bin/_mocha --include-all-sources -- --recursive test/unit/**/*.js -R spec",
     "precommit-msg": "echo 'Pre-commit checks...' && exit 0"
   },
-  "pre-commit": [ "precommit-msg", "lint" ],
+  "pre-commit": [
+    "precommit-msg",
+    "lint"
+  ],
   "keywords": [
     "classification",
     "document"
@@ -22,7 +25,8 @@
     "fs-extra": "^5.0.0",
     "lodash": "^4.17.5",
     "mammoth": "^1.4.4",
-    "pdf2json": "^1.1.7"
+    "pdf2json": "^1.1.7",
+    "stemmer": "^1.0.2"
   },
   "devDependencies": {
     "app-module-path": "^2.2.0",

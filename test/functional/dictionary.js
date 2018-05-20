@@ -14,7 +14,7 @@ const root = 'C:\\Users\\dmitr\\Desktop\\20_newsgroup';
 const desktop = 'C:\\Users\\dmitr\\Desktop';
 
 // test1File(path.resolve(root, 'alt.atheism', '49960'), path.resolve(desktop, '49960.txt'));
-testFolders(0.8, path.resolve(desktop, '20_newsgroup.txt'));
+testFolders(1, path.resolve(desktop, '20_newsgroup.txt'));
 
 async function test1File(file, output) {
     const dictionaryBuilder = new DictionaryBuilder();
