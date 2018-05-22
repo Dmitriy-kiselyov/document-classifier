@@ -3,7 +3,7 @@
 const fs = require('fs-extra');
 const path = require('path');
 
-const utils = require('lib/dataset/utils');
+const utils = require('lib/data-builder/utils');
 
 describe('dataset/utils', () => {
     const sandbox = sinon.createSandbox();
@@ -21,6 +21,19 @@ describe('dataset/utils', () => {
         const files = await utils.getFiles('folder');
 
         assert.deepEqual(files, ['folder/file1', 'folder/file2']);
+    });
+
+    it('get folders', async () => {
+        sandbox.stub(fs, 'readdir').withArgs('folder').resolves(['subfolder1', 'file', 'subfolder2']);
+        sandbox.stub(path, 'resolve').callsFake((folder, file) => `${folder}/${file}`);
+        sandbox.stub(fs, 'stat')
+            .withArgs('folder/subfolder1').resolves({isDirectory: () => true})
+            .withArgs('folder/subfolder2').resolves({isDirectory: () => true})
+            .withArgs('folder/file').resolves({isDirectory: () => false});
+
+        const files = await utils.getFolders('folder');
+
+        assert.deepEqual(files, ['folder/subfolder1', 'folder/subfolder2']);
     });
 
     it('split files', () => {
