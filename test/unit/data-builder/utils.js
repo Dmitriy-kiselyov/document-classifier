@@ -5,7 +5,7 @@ const path = require('path');
 
 const utils = require('lib/data-builder/utils');
 
-describe('dataset/utils', () => {
+describe('data-builder/utils', () => {
     const sandbox = sinon.createSandbox();
 
     afterEach(() => sandbox.restore());

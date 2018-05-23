@@ -26,13 +26,13 @@ describe('config', () => {
 
     describe('default', () => {
         it('should provide default config', () => {
-            const config = Config({});
+            const config = Config.create({});
 
             assert.deepEqual(config, defaultConfig);
         });
 
         it('should rewrite default parametrs', () => {
-            const config = Config({poolSize: 1234, randomWeights: true});
+            const config = Config.create({poolSize: 1234, randomWeights: true});
 
             defaultConfig.poolSize = 1234;
             defaultConfig.randomWeights = true;
@@ -41,7 +41,7 @@ describe('config', () => {
 
         it('should rewrite transformers and filters', () => {
             const filter = () => {};
-            const config = Config({transformers: [], filters: [filter]});
+            const config = Config.create({transformers: [], filters: [filter]});
 
             defaultConfig.transformers = [];
             defaultConfig.filters = [filter];
@@ -49,7 +49,7 @@ describe('config', () => {
         });
 
         it('should rewrite dictionary filter parametrs', () => {
-            const config = Config({
+            const config = Config.create({
                 dictionaryFilters: {
                     common: 20
                 }
@@ -68,46 +68,46 @@ describe('config', () => {
         it('should assert boolean for "countWords"', () => {
             defaultConfig.countWords = 123;
 
-            assert.throws(() => Config(defaultConfig), '"countWords" should be boolean but got number');
+            assert.throws(() => Config.create(defaultConfig), '"countWords" should be boolean but got number');
         });
 
         it('should assert positive integer for "poolSize"', () => {
             defaultConfig.poolSize = 0;
 
-            assert.throws(() => Config(defaultConfig), '"poolSize" should be positive integer but got 0');
+            assert.throws(() => Config.create(defaultConfig), '"poolSize" should be positive integer but got 0');
         });
 
         it('should assert boolean for "withLearning"', () => {
             defaultConfig.withLearning = undefined;
 
-            assert.throws(() => Config(defaultConfig), '"withLearning" should be boolean but got undefined');
+            assert.throws(() => Config.create(defaultConfig), '"withLearning" should be boolean but got undefined');
         });
 
         it('should assert boolean for "randomWeights"', () => {
             defaultConfig.randomWeights = null;
 
-            assert.throws(() => Config(defaultConfig), '"randomWeights" should be boolean but got null');
+            assert.throws(() => Config.create(defaultConfig), '"randomWeights" should be boolean but got null');
         });
 
         it('should assert positive integer for "learningIterations"', () => {
             defaultConfig.learningIterations = [123];
 
-            assert.throws(() => Config(defaultConfig), '"learningIterations" should be positive integer but got array');
+            assert.throws(() => Config.create(defaultConfig), '"learningIterations" should be positive integer but got array');
         });
 
         describe('learningRate', () => {
             it('should assert number', () => {
                 defaultConfig.learningRate = {a: 5};
 
-                assert.throws(() => Config(defaultConfig), '"learningRate" should be number but got object');
+                assert.throws(() => Config.create(defaultConfig), '"learningRate" should be number but got object');
             });
 
             it('should assert number in range (0 ; 1]', () => {
                 defaultConfig.learningRate = 1.1;
-                assert.throws(() => Config(defaultConfig), '"learningRate" should be in range (0 ; 1] but got 1.1');
+                assert.throws(() => Config.create(defaultConfig), '"learningRate" should be in range (0 ; 1] but got 1.1');
 
                 defaultConfig.learningRate = 0;
-                assert.throws(() => Config(defaultConfig), '"learningRate" should be in range (0 ; 1] but got 0');
+                assert.throws(() => Config.create(defaultConfig), '"learningRate" should be in range (0 ; 1] but got 0');
             });
         });
 
@@ -115,43 +115,43 @@ describe('config', () => {
             it('should assert object', () => {
                 defaultConfig.dictionaryFilters = true;
 
-                assert.throws(() => Config(defaultConfig), '"dictionaryFilters" should be object but got boolean');
+                assert.throws(() => Config.create(defaultConfig), '"dictionaryFilters" should be object but got boolean');
             });
 
             it('should assert positive integer for "count"', () => {
                 defaultConfig.dictionaryFilters = {count: 0.5};
 
-                assert.throws(() => Config(defaultConfig), '"dictionaryFilters.count" should be positive integer but got 0.5');
+                assert.throws(() => Config.create(defaultConfig), '"dictionaryFilters.count" should be positive integer but got 0.5');
             });
 
             it('should assert positive integer for "count"', () => {
                 defaultConfig.dictionaryFilters = {common: false};
 
-                assert.throws(() => Config(defaultConfig), '"dictionaryFilters.common" should be positive integer but got boolean');
+                assert.throws(() => Config.create(defaultConfig), '"dictionaryFilters.common" should be positive integer but got boolean');
             });
         });
 
         it('should assert array of functions for "transformers"', () => {
             defaultConfig.transformers = 'Hello';
 
-            assert.throws(() => Config(defaultConfig), '"transformers" should be an array of functions but got string');
+            assert.throws(() => Config.create(defaultConfig), '"transformers" should be an array of functions but got string');
         });
 
         it('should assert array of functions for "filters"', () => {
             defaultConfig.filters = [() => {}, 123];
 
-            assert.throws(() => Config(defaultConfig), '"filters" should be an array of functions but got number inside array');
+            assert.throws(() => Config.create(defaultConfig), '"filters" should be an array of functions but got number inside array');
         });
 
         describe('keys', () => {
             it('should assert config keys', () => {
-                assert.throws(() => Config({a: 5}), 'Unknown option "a"');
+                assert.throws(() => Config.create({a: 5}), 'Unknown option "a"');
             });
 
             it('should assert keys recursively', () => {
                 defaultConfig.dictionaryFilters = {count: 1, foo: 'bar'};
 
-                assert.throws(() => Config(defaultConfig), 'Unknown option "dictionaryFilters.foo"');
+                assert.throws(() => Config.create(defaultConfig), 'Unknown option "dictionaryFilters.foo"');
             });
         });
 
@@ -171,7 +171,7 @@ describe('config', () => {
                 filters: [() => {}]
             };
 
-            const resultConfig = Config(config);
+            const resultConfig = Config.create(config);
 
             assert.deepEqual(resultConfig, config);
         });

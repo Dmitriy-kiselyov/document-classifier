@@ -8,7 +8,8 @@ const DictionaryBuilder = require('../../lib/dictionary-builder/index');
 const DictionaryFilter = require('../../lib/dictionary-builder/dictionary-filter');
 const readerCache = require('../../lib/reader-cache');
 const Classifier = require('../../lib/classifier');
-const utils = require('./utils');
+const Dataset = require('../../lib/data-builder/dataset');
+const {getFolders} = require('../../lib/data-builder/utils');
 
 const root = 'C:\\Users\\dmitr\\Desktop\\20_newsgroup';
 const desktop = 'C:\\Users\\dmitr\\Desktop';
@@ -34,14 +35,16 @@ function filterDictionary(dictionary) {
 async function testFolders(rate, output) {
     console.time('prepare dictionary');
 
-    const classifier = new Classifier();
-    const folders = await utils.getSubfolders(root);
+    const folders = await getFolders(root);
+    const dataset = await Dataset.createAndSplit(folders, rate);
 
-    await classifier.prepare(folders, rate);
+    const classifier = new Classifier(dataset, {dictionaryFilters: {count: 3}});
+
+    await classifier.prepare();
     console.timeEnd('prepare dictionary');
 
-    printDictionaryStats(classifier.dataset.dictionary);
-    await printDictionaryWithCount(classifier.dataset.dictionary, output);
+    printDictionaryStats(classifier.dictionary);
+    await printDictionaryWithCount(classifier.dictionary, output);
 }
 
 async function printDictionaryWithCount(dictionary, output) {
