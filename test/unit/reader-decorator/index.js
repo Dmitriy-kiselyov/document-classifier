@@ -43,7 +43,7 @@ describe('reader-decorator', () => {
 
         const trans1 = sinon.stub().callsFake((word) => word + 't1');
         const trans2 = sinon.stub().callsFake((word) => word + 't2');
-        readerProxy.addTransformers(trans1, trans2);
+        readerProxy.addTransformers([trans1, trans2]);
 
         assert.equal(readerProxy.next(), 'word_t1t2');
         assert.equal(readerProxy.next(), 'another_t1t2');
@@ -56,7 +56,7 @@ describe('reader-decorator', () => {
             .returns(undefined);
 
         const trans = sinon.stub().callsFake((word) => '  1' + word + '1  ');
-        readerProxy.addTransformers(trans);
+        readerProxy.addTransformers([trans]);
 
         assert.equal(readerProxy.next(), '1word1');
         assert.equal(readerProxy.next(), undefined);
@@ -68,7 +68,7 @@ describe('reader-decorator', () => {
             .returns(undefined);
 
         const trans = sinon.stub().returns('   ');
-        readerProxy.addTransformers(trans);
+        readerProxy.addTransformers([trans]);
 
         assert.equal(readerProxy.next(), undefined);
     });
@@ -82,7 +82,7 @@ describe('reader-decorator', () => {
 
         const filter1 = sinon.stub().callsFake((word) => word.includes('1'));
         const filter2 = sinon.stub().callsFake((word) => word.includes('2'));
-        readerProxy.addFilters(filter1, filter2);
+        readerProxy.addFilters([filter1, filter2]);
 
         assert.equal(readerProxy.next(), 'word-12');
         assert.equal(readerProxy.next(), undefined);
@@ -96,8 +96,8 @@ describe('reader-decorator', () => {
 
         const trans = sinon.stub().callsFake((word) => word + '_1');
         const filter = sinon.stub().callsFake((word) => word !== 'word_1');
-        readerProxy.addTransformers(trans);
-        readerProxy.addFilters(filter);
+        readerProxy.addTransformers([trans]);
+        readerProxy.addFilters([filter]);
 
         assert.equal(readerProxy.next(), 'another_1');
         assert.equal(readerProxy.next(), undefined);

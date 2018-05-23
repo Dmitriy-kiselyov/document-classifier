@@ -2,6 +2,7 @@
 
 const Promise = require('bluebird');
 
+const Config = require('lib/config');
 const Dictionary = require('lib/dictionary-builder/dictionary');
 const MaskBuilder = require('lib/mask-builder');
 
@@ -13,6 +14,7 @@ const createReaderStub = () => {
 };
 
 describe('mask-builder', () => {
+    const sandbox = sinon.createSandbox();
     let dictionary;
 
     beforeEach(() => {
@@ -21,6 +23,12 @@ describe('mask-builder', () => {
         dictionary.add('word2');
         dictionary.add('word3');
         dictionary.add('word4');
+
+        sandbox.stub(Config, 'get').returns({countWords: false});
+    });
+
+    afterEach(() => {
+        sandbox.restore();
     });
 
     it('should read files first', async () => {

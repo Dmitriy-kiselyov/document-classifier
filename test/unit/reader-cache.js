@@ -2,10 +2,9 @@
 
 const ReaderFactory = require('lib/reader-factory');
 const ReaderDecorator = require('lib/reader-decorator');
-const transformers = require('lib/reader-decorator/transformers');
-const filters = require('lib/reader-decorator/filters');
+const Config = require('lib/config');
 
-describe('dataset/reader-cache', () => {
+describe('reader-cache', () => {
     const sandbox = sinon.sandbox.create();
     let readerCache;
 
@@ -21,8 +20,10 @@ describe('dataset/reader-cache', () => {
 
         sandbox.stub(ReaderFactory, 'create').returns('READER');
         sandbox.stub(ReaderDecorator, 'create').callsFake(() => createReaderDecoratorStub());
-        sandbox.stub(transformers, 'all').returns(['tr1', 'tr2']);
-        sandbox.stub(filters, 'all').returns(['f1', 'f2']);
+        sandbox.stub(Config, 'get').returns({
+            transformers: ['tr1', 'tr2'],
+            filters: ['f1', 'f2']
+        });
     });
 
     afterEach(() => {
@@ -43,8 +44,8 @@ describe('dataset/reader-cache', () => {
         assert.calledOnceWith(ReaderDecorator.create, 'READER');
         assert.callOrder(ReaderFactory.create, ReaderDecorator.create);
         assert.equal(reader, ReaderDecorator.create.getCall(0).returnValue);
-        assert.calledOnceWith(reader.addTransformers, 'tr1', 'tr2');
-        assert.calledOnceWith(reader.addFilters, 'f1', 'f2');
+        assert.calledOnceWith(reader.addTransformers, ['tr1', 'tr2']);
+        assert.calledOnceWith(reader.addFilters, ['f1', 'f2']);
     });
 
     it('should return cached reader', () => {

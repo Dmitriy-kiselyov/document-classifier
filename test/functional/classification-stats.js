@@ -4,7 +4,8 @@ const Promise = require('bluebird');
 const path = require('path');
 
 const Classifier = require('../../lib/classifier');
-const utils = require('./utils');
+const Dataset = require('../../lib/data-builder/dataset');
+const {getFolders} = require('../../lib/data-builder/utils');
 
 const root = 'C:\\Users\\dmitr\\Desktop\\20_newsgroup';
 
@@ -35,10 +36,12 @@ const printStats = (stats) => {
 const main = async (rate) => {
     console.time('classification');
 
-    const classifier = new Classifier();
-    const folders = await utils.getSubfolders(root);
+    const folders = await getFolders(root);
+    const dataset = await Dataset.createAndSplit(folders, rate);
 
-    await classifier.prepare(folders, rate);
+    const classifier = new Classifier(dataset, {dictionaryFilters: {count: 3}});
+
+    await classifier.prepare();
     console.log('Prepare complete');
 
     const stats = [];
