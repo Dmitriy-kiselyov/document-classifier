@@ -9,6 +9,7 @@ describe('config', () => {
 
     beforeEach(() => {
         defaultConfig = {
+            log: true,
             countWords: false,
             poolSize: 524288000,
             withLearning: false,
@@ -63,6 +64,12 @@ describe('config', () => {
     describe('validation', () => {
         beforeEach(() => {
             delete defaultConfig.dictionaryFilters.common;
+        });
+
+        it('should assert boolean for "log"', () => {
+            defaultConfig.log = 'hello';
+
+            assert.throws(() => Config.create(defaultConfig), '"log" should be boolean but got string');
         });
 
         it('should assert boolean for "countWords"', () => {
