@@ -118,10 +118,10 @@ describe('config', () => {
                 assert.throws(() => Config.create(defaultConfig), '"dictionaryFilters" should be object but got boolean');
             });
 
-            it('should assert positive integer for "count"', () => {
-                defaultConfig.dictionaryFilters = {count: 0.5};
+            it('should assert non-negative integer for "count"', () => {
+                defaultConfig.dictionaryFilters = {count: -1};
 
-                assert.throws(() => Config.create(defaultConfig), '"dictionaryFilters.count" should be positive integer but got 0.5');
+                assert.throws(() => Config.create(defaultConfig), '"dictionaryFilters.count" should be non-negative integer but got -1');
             });
 
             it('should assert positive integer for "count"', () => {

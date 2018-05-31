@@ -3,8 +3,8 @@
 const Promise = require('bluebird');
 const path = require('path');
 
-const Classifier = require('../../lib/classifier');
-const Dataset = require('../../lib/data-builder/dataset');
+const Classifier = require('../../index');
+const {Dataset} = Classifier;
 const {getFolders} = require('../../lib/data-builder/utils');
 
 const root = 'C:\\Users\\dmitr\\Desktop\\20_newsgroup';

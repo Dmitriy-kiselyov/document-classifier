@@ -4,32 +4,30 @@
 const fs = require('fs-extra');
 const path = require('path');
 
-const DictionaryBuilder = require('../../lib/dictionary-builder/index');
-const DictionaryFilter = require('../../lib/dictionary-builder/dictionary-filter');
-const readerCache = require('../../lib/reader-cache');
-const Classifier = require('../../lib/classifier');
-const Dataset = require('../../lib/data-builder/dataset');
+const Classifier = require('../../index');
+const {Dataset} = Classifier;
 const {getFolders} = require('../../lib/data-builder/utils');
 
 const root = 'C:\\Users\\dmitr\\Desktop\\20_newsgroup';
 const desktop = 'C:\\Users\\dmitr\\Desktop';
 
-// test1File(path.resolve(root, 'alt.atheism', '49960'), path.resolve(desktop, '49960.txt'));
+//test1File(path.resolve(root, 'alt.atheism', '49960'), path.resolve(desktop, '49960.txt'));
 testFolders(1, path.resolve(desktop, '20_newsgroup.txt'));
 
 async function test1File(file, output) {
-    const dictionaryBuilder = new DictionaryBuilder();
-    const reader = readerCache.get(file);
-    await dictionaryBuilder.add(reader);
+    const dataset = new Dataset();
+    dataset.add('origin', [file], ['no-exist-file']); // в testFiles нужно передать файл, даже не существующий, иначе не пройдет валидация
 
-    const dictionary = filterDictionary(dictionaryBuilder.build());
+    const classifier = new Classifier(dataset, {
+        dictionaryFilters: {
+            count: 0, // не фильтровать слова по количеству встречаемых слов
+            common: 100500 // отключить удаление слов общие для всех категорий
+        }
+    });
+    await classifier.prepareDictionary();
 
-    printDictionaryStats(dictionary);
-    await printDictionaryWithCount(dictionary, output);
-}
-
-function filterDictionary(dictionary) {
-    return DictionaryFilter.filter(dictionary, DictionaryFilter.ONCE);
+    printDictionaryStats(classifier.dictionary);
+    await printDictionaryWithCount(classifier.dictionary, output);
 }
 
 async function testFolders(rate, output) {
@@ -40,7 +38,7 @@ async function testFolders(rate, output) {
 
     const classifier = new Classifier(dataset, {dictionaryFilters: {count: 3}});
 
-    await classifier.prepare();
+    await classifier.prepareDictionary();
     console.timeEnd('prepare dictionary');
 
     printDictionaryStats(classifier.dictionary);
