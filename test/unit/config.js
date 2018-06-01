@@ -164,6 +164,7 @@ describe('config', () => {
 
         it('should accept valid config', () => {
             const config = {
+                log: true,
                 countWords: true,
                 poolSize: 1234,
                 withLearning: true,

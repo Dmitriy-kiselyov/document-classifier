@@ -6,7 +6,7 @@ const path = require('path');
 
 const Classifier = require('../../index');
 const {Dataset} = Classifier;
-const {getFolders} = require('../../lib/data-builder/utils');
+const {getFolders} = require('../../lib/dataset/utils');
 
 const root = 'C:\\Users\\dmitr\\Desktop\\20_newsgroup';
 const desktop = 'C:\\Users\\dmitr\\Desktop';

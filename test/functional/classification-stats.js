@@ -5,11 +5,39 @@ const path = require('path');
 
 const Classifier = require('../../index');
 const {Dataset} = Classifier;
-const {getFolders} = require('../../lib/data-builder/utils');
+const {getFolders} = require('../../lib/dataset/utils');
 
-const root = 'C:\\Users\\dmitr\\Desktop\\20_newsgroup';
+const root = 'C:\\Users\\dmitr\\Desktop\\20_newsgroup — копия';
 
-const printStats = (stats) => {
+main(0.8);
+
+async function main(rate) {
+    console.time('classification');
+
+    const folders = await getFolders(root);
+    const dataset = await Dataset.createAndSplit(folders, rate);
+
+    const classifier = new Classifier(dataset, {
+        dictionaryFilters: {count: 3},
+        withLearning: true,
+        learningIterations: 3
+    });
+
+    await classifier.prepare();
+
+    const stats = [];
+    await Promise.map(folders, async (folder) => {
+        const stat = await classifier.test(folder);
+        console.log(folder, stat);
+        stats.push({folder, stat});
+    });
+
+    console.log('------------------------------');
+    printStats(stats);
+    console.timeEnd('classification');
+}
+
+function printStats(stats) {
     const formatPercent = (yes, total) => {
         return Math.floor(yes / total * 100);
     };
@@ -31,29 +59,4 @@ const printStats = (stats) => {
 
     const percent = formatPercent(yesSum, totalSum);
     console.log(`Classification rate: ${percent}%`);
-};
-
-const main = async (rate) => {
-    console.time('classification');
-
-    const folders = await getFolders(root);
-    const dataset = await Dataset.createAndSplit(folders, rate);
-
-    const classifier = new Classifier(dataset, {dictionaryFilters: {count: 3}});
-
-    await classifier.prepare();
-    console.log('Prepare complete');
-
-    const stats = [];
-    await Promise.map(folders, async (folder) => {
-        const stat = await classifier.test(folder);
-        console.log(folder, stat);
-        stats.push({folder, stat});
-    });
-
-    console.log('------------------------------');
-    printStats(stats);
-    console.timeEnd('classification');
-};
-
-main(0.8);
+}

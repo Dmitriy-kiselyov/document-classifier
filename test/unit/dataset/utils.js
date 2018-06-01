@@ -3,9 +3,9 @@
 const fs = require('fs-extra');
 const path = require('path');
 
-const utils = require('lib/data-builder/utils');
+const utils = require('lib/dataset/utils');
 
-describe('data-builder/utils', () => {
+describe('dataset/utils', () => {
     const sandbox = sinon.createSandbox();
 
     afterEach(() => sandbox.restore());

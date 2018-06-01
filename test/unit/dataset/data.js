@@ -1,9 +1,9 @@
 'use strict';
 
-const Data = require('lib/data-builder/data');
-const utils = require('lib/data-builder/utils');
+const Data = require('lib/dataset/data');
+const utils = require('lib/dataset/utils');
 
-describe('data-builder/data', () => {
+describe('dataset/data', () => {
     const sandbox = sinon.createSandbox();
 
     afterEach(() => sandbox.restore());
